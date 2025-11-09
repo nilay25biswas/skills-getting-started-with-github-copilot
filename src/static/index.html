@@ -21,32 +21,34 @@
         </div>
       </section>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
-          </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
-          </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
+      <div class="signup-participants-container">
+        <section id="signup-container">
+          <h3>Sign Up for an Activity</h3>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="email">Student Email:</label>
+              <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            </div>
+            <div class="form-group">
+              <label for="activity">Select Activity:</label>
+              <select id="activity" required>
+                <option value="">-- Select an activity --</option>
+                <!-- Activity options will be loaded here -->
+              </select>
+            </div>
+            <button type="submit">Sign Up</button>
+          </form>
+          <div id="message" class="hidden"></div>
+        </section>
 
-      <!-- New right-hand sidebar: activity cards that list participants -->
-      <section id="activity-details">
-        <h3>Activity Participants</h3>
-        <div id="activity-cards">
-          <p>Loading participant activity cards...</p>
-        </div>
-      </section>
+        <!-- Activity cards that list participants -->
+        <section id="activity-details">
+          <h3>Activity Participants</h3>
+          <div id="activity-cards">
+            <p>Loading participant activity cards...</p>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer>

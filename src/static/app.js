@@ -8,7 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
+      const response = await fetch("/activities", {
+        headers: {
+          'Accept': 'application/json'
+        },
+        cache: 'no-cache' // Ensure we get fresh data
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch activities');
+      }
+      
       const activities = await response.json();
 
       // Clear loading message
@@ -49,7 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
           pCard.className = "participant-card";
 
           const participantsHtml = details.participants
-            .map((p) => `<div class="participant-item">${p}</div>`)
+            .map((p) => `
+              <div class="participant-item">
+                <span>${p}</span>
+                <span class="delete-icon" title="Unregister participant" onclick="unregisterParticipant('${name}', '${p}')">✖</span>
+              </div>`)
             .join("");
 
           pCard.innerHTML = `
@@ -82,10 +96,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const activity = document.getElementById("activity").value;
 
     try {
+      // Disable the submit button while processing
+      const submitButton = signupForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+
       const response = await fetch(
         `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
         {
           method: "POST",
+          headers: {
+            'Accept': 'application/json'
+          }
         }
       );
 
@@ -95,8 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
-        // Refresh activities so participant panel updates immediately
-        await fetchActivities();
+        
+        // Ensure we refresh the activities list
+        try {
+          await fetchActivities();
+        } catch (refreshError) {
+          console.error("Error refreshing activities:", refreshError);
+        }
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -113,9 +139,51 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    } finally {
+      // Re-enable the submit button
+      const submitButton = signupForm.querySelector('button[type="submit"]');
+      submitButton.disabled = false;
     }
   });
 
   // Initialize app
   fetchActivities();
 });
+
+// Function to unregister a participant from an activity
+async function unregisterParticipant(activityName, email) {
+  try {
+    const response = await fetch(
+      `/activities/${encodeURIComponent(activityName)}/unregister/${encodeURIComponent(email)}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Show success message
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = result.message;
+      messageDiv.className = "success";
+      messageDiv.classList.remove("hidden");
+
+      // Refresh activities to update the participant list
+      await fetchActivities();
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        messageDiv.classList.add("hidden");
+      }, 5000);
+    } else {
+      throw new Error(result.detail || "Failed to unregister participant");
+    }
+  } catch (error) {
+    console.error("Error unregistering participant:", error);
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = error.message;
+    messageDiv.className = "error";
+    messageDiv.classList.remove("hidden");
+  }
+}

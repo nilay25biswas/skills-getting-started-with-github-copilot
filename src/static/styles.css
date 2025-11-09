@@ -29,14 +29,20 @@ header h1 {
 }
 
 main {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.signup-participants-container {
   display: grid;
-  grid-template-columns: 2fr 360px; /* left: activities, right: sidebar */
+  grid-template-columns: 1fr 360px;
   gap: 30px;
   align-items: start;
 }
 
 @media (max-width: 900px) {
-  main {
+  .signup-participants-container {
     grid-template-columns: 1fr;
   }
 }
@@ -47,7 +53,11 @@ section {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 500px;
+}
+
+#activities-container {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 section h3 {
@@ -176,7 +186,8 @@ footer {
 
 .participant-list {
   margin-top: 8px;
-  padding-left: 16px;
+  list-style: none;
+  padding: 0;
 }
 
 .participant-item {
@@ -184,6 +195,29 @@ footer {
   color: #333;
   margin-bottom: 6px;
   word-break: break-word;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.participant-item:hover {
+  background-color: #f5f5f5;
+}
+
+.delete-icon {
+  color: #dc3545;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 4px 8px;
+  margin-left: 8px;
+  transition: opacity 0.2s;
+}
+
+.delete-icon:hover {
+  opacity: 1;
 }
 
 /* Small helper when there are no participant cards */
