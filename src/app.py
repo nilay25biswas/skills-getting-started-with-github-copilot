@@ -23,13 +23,13 @@ activities = {
         "description": "Learn strategies and compete in chess tournaments",
         "schedule": "Fridays, 3:30 PM - 5:00 PM",
         "max_participants": 12,
-        "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
+        "participants": ["michael@mergington.edu", "daniel@mergington.edu", "alex@mergington.edu"]
     },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
         "max_participants": 20,
-        "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+        "participants": ["emma@mergington.edu", "sophia@mergington.edu", "noelle@mergington.edu"]
     },
     "Gym Class": {
         "description": "Physical education and sports activities",
@@ -78,6 +78,18 @@ activities = {
         "schedule": "Mondays, 3:30 PM - 5:00 PM",
         "max_participants": 22,
         "participants": ["henry@mergington.edu", "amelia@mergington.edu"]
+    },
+
+    # New sample activity with participants to demonstrate the participant panel
+    "Photography Club": {
+        "description": "Learn photography techniques and showcase student work",
+        "schedule": "Thursdays, 3:30 PM - 5:00 PM",
+        "max_participants": 15,
+        "participants": [
+            "logan@mergington.edu",
+            "zoe@mergington.edu",
+            "ryan@mergington.edu"
+        ]
     }
 }
 # In-memory activity database

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const activityCardsContainer = document.getElementById("activity-cards");
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -12,6 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Clear loading message
       activitiesList.innerHTML = "";
+      // Reset select options to the placeholder option
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+      // Clear right-hand activity cards (if container exists)
+      if (activityCardsContainer) activityCardsContainer.innerHTML = "";
+
+      // Track whether we added any participant cards
+      let addedParticipantCards = 0;
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -34,9 +42,34 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+
+        // If activity has participants, add a participant card to the right sidebar
+        if (Array.isArray(details.participants) && details.participants.length > 0 && activityCardsContainer) {
+          const pCard = document.createElement("div");
+          pCard.className = "participant-card";
+
+          const participantsHtml = details.participants
+            .map((p) => `<div class="participant-item">${p}</div>`)
+            .join("");
+
+          pCard.innerHTML = `
+            <h4>${name}</h4>
+            <div class="participant-count"><strong>${details.participants.length}</strong> participant(s)</div>
+            <div class="participant-list">${participantsHtml}</div>
+          `;
+
+          activityCardsContainer.appendChild(pCard);
+          addedParticipantCards++;
+        }
       });
+
+      // If no participant cards were added, show friendly message
+      if (activityCardsContainer && addedParticipantCards === 0) {
+        activityCardsContainer.innerHTML = "<p>No participants registered yet.</p>";
+      }
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
+      if (activityCardsContainer) activityCardsContainer.innerHTML = "<p>Failed to load participant activity cards.</p>";
       console.error("Error fetching activities:", error);
     }
   }
@@ -62,6 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // Refresh activities so participant panel updates immediately
+        await fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
